@@ -3,6 +3,7 @@ import {Routes, Route} from 'react-router-dom'
 import HomePage from "./Pages/HomePage"
 import SignInPage from "./Pages/SignInPage"
 import SignUpPage from "./Pages/SignUpPage"
+import EmailVerificationPage from "./Pages/EmailVerificationPage"
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <Route path="/" element={<HomePage/>} />
       <Route path="/sign-up" element={<SignUpPage/>} />
       <Route path="/sign-in" element={<SignInPage/>} />
+      <Route path="/verify-email" element={<EmailVerificationPage/>} />
 
 
     </Routes>
