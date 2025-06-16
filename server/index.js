@@ -11,7 +11,7 @@ const app= express();
 dotenv.config();
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://authentication-y6mo.onrender.com',
     methods:['GET','PUT','POST','DELETE'],
     credentials: true,
 }))
