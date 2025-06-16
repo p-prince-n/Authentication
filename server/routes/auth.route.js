@@ -10,6 +10,6 @@ authRouter.post('/signIn', signIn);
 authRouter.post('/signOut', signOut);
 authRouter.post('/verifyEmail', verifyEmail);
 authRouter.post('/forgotPassword', forgetPassword);
-authRouter.post('/forgot-password/:resetToken', resetPassword);
+authRouter.post('/reset-password/:resetToken', resetPassword);
 
 export default authRouter

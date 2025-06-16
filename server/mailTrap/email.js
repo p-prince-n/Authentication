@@ -52,7 +52,7 @@ export const generateForgotEmail=async(email, forgotToken)=>{
             from: sender,
             to: recipient,
             subject: 'Forgot Password',
-            html: PASSWORD_RESET_REQUEST_TEMPLATE.replace('{resetURL}', `${process.env.CLIENT_URL}/forgot-password/${forgotToken}`),
+            html: PASSWORD_RESET_REQUEST_TEMPLATE.replace('{resetURL}', `${process.env.CLIENT_URL}/reset-password/${forgotToken}`),
              category: 'Forgot Password'
         })
         console.log(res);

@@ -1,11 +1,15 @@
-import { motion} from "framer-motion";
+import { motion } from "framer-motion";
 import Input from "../components/Input";
-import { User, Mail, Eye, EyeOff, Lock } from "lucide-react";
+import { User, Mail, Eye, EyeOff, Lock, Loader } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
+import { useAuthStore } from "../Store/authStore";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
+  const { signUp, error, isLoading } = useAuthStore();
+  const navigate=useNavigate();
   const [userData, setUserData] = useState({
     name: "",
     email: "",
@@ -14,7 +18,26 @@ const SignUpPage = () => {
 
   const [lock, setLock] = useState(false);
 
-  const handleSubmit = (e) => {e.preventDefault()};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try{
+      if (
+      userData.name !== "" &&
+      userData.email !== "" &&
+      userData.password !== ""
+    ) {
+      await signUp(userData);
+   
+      navigate('/verify-email')
+    }else{
+      toast.error('All field are required')
+    }
+    }catch(e){
+      console.log(e);
+      
+      toast.error(e.response.data.message)
+    }
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -70,20 +93,24 @@ const SignUpPage = () => {
               )}
             </button>
           </div>
-          <PasswordStrengthMeter password={userData.password}/>
+          <PasswordStrengthMeter password={userData.password} />
           <motion.button
             className="mt-5 w-full py-3 px-4 text-center bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-200 transition-all duration-200 "
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
             type="submit"
+            disabled={isLoading}
           >
-            Sign Up
+           {isLoading ? <Loader className="animate-spin mx-auto" size={24} />: ' Sign Up'}
           </motion.button>
         </form>
       </div>
       <div className="px-8 py-4 bg-gray-900 bg-opacity-50 flex justify-center ">
-        <p className="text-sm text-gray-400 ">Already have an account ? {' '}
-            <Link to={'/sign-in'} className="text-green-400 hover:underline ">Login</Link>
+        <p className="text-sm text-gray-400 ">
+          Already have an account ?{" "}
+          <Link to={"/sign-in"} className="text-green-400 hover:underline ">
+            Login
+          </Link>
         </p>
       </div>
     </motion.div>

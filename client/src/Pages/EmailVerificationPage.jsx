@@ -1,12 +1,14 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAuthStore } from "../Store/authStore";
+import toast from "react-hot-toast";
 
 const EmailVerificationPage = () => {
+  const {error, isLoading, emailVerification }=useAuthStore();
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRef = useRef([]);
   const navigate = useNavigate();
-  const isLoading = false;
   const handleChange = (index, value) => {
     const newCode = [...code];
     if (value.length > 1) {
@@ -31,6 +33,29 @@ const EmailVerificationPage = () => {
       inputRef.current[index - 1].focus();
     }
   };
+
+  const handleSubmit= async(e)=>{
+    e.preventDefault();
+    const verificationCode=code.join('');
+    try{
+      if (
+      verificationCode!== ''
+    ) {
+      await emailVerification(verificationCode);
+   
+      navigate('/')
+    }
+    }catch(e){
+      toast.error(e.response.data.message)
+    }
+    
+  }
+
+  useEffect(()=>{
+    if(code.every(digit=> digit !== '')){
+        handleSubmit(new Event('submit'))
+    }
+  }, [])
   return (
     <div className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-xl shadow-xl overflow-hidden">
       <motion.div
@@ -46,7 +71,7 @@ const EmailVerificationPage = () => {
           {" "}
           Enter the 6 digit code sent to your email address.
         </p>
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex justify-between">
             {code.map((digit, index) => (
               <input
